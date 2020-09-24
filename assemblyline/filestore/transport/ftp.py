@@ -1,16 +1,15 @@
+import errno
 import ftplib
 import logging
 import os
 import posixpath
 import time
-import errno
-
 from io import BytesIO
 
 from assemblyline.common.exceptions import ChainAll
 from assemblyline.common.path import splitpath
 from assemblyline.common.uid import get_random_id
-from assemblyline.filestore.transport.base import Transport, TransportException, normalize_srl_path
+from assemblyline.filestore.transport.base import Transport, TransportException, normalize_srl_path, TransportFile
 
 
 def reconnect_retry_on_fail(func):
@@ -215,3 +214,16 @@ class TransportFTP(Transport):
             self.log.debug("Rename: %s -> %s", temppath, finalpath)
             self.ftp.rename(temppath, finalpath)
             assert (self.exists(dst_path))
+
+
+# TODO: Create an extension of the base class TransportFile
+
+class TransportFileFTP(TransportFile):
+    def __init__(self, iterator):
+        self.iterator = iterator
+
+    def iterator(self):
+        pass
+
+    def read(self):
+        pass
