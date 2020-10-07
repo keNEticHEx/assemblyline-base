@@ -1,9 +1,10 @@
 import os
+import tempfile
 
 import pytest
-from assemblyline.filestore.transport.base import TransportException
 
 from assemblyline.filestore import FileStore
+from assemblyline.filestore.transport.base import TransportException
 
 
 def test_azure():
@@ -25,7 +26,9 @@ def test_http():
     fs = FileStore('http://cyber.gc.ca/en/')
     assert fs.exists('assemblyline') != []
     assert fs.get('assemblyline') is not None
-
+    tempf = tempfile.NamedTemporaryFile()
+    fs.download('assembyline', tempf.name)
+    assert open(tempf.name, 'r').read() is not None
 
 def test_https():
     """
@@ -35,6 +38,9 @@ def test_https():
     fs = FileStore('https://cyber.gc.ca/en/')
     assert fs.exists('assemblyline') != []
     assert fs.get('assemblyline') is not None
+    tempf = tempfile.NamedTemporaryFile()
+    fs.download('assembyline', tempf.name)
+    assert open(tempf.name, 'r').read() is not None
 
 
 # def test_sftp():
@@ -87,5 +93,9 @@ def test_s3():
     """
     fs = FileStore('s3://AKIAIIESFCKMSXUP6KWQ:Uud08qLQ48Cbo9RB7b+H+M97aA2wdR8OXaHXIKwL@'
                    's3.amazonaws.com/?s3_bucket=assemblyline-support&aws_region=us-east-1')
+    tempf = tempfile.NamedTemporaryFile()
     assert fs.exists('al4_s3_pytest.txt') != []
     assert fs.get('al4_s3_pytest.txt') is not None
+    assert fs.read('al4_s3_pytest.txt') is not None
+    fs.download('al4_s3_pytest.txt', tempf.name)
+    assert open(tempf.name, 'r').read() is not None
