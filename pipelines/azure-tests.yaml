@@ -19,6 +19,15 @@ resources:
       DISCOVERY_TYPE: 'single-node'
     ports:
       - 9200:9200
+  - container: ftpserver
+    image: fauria/vsftpd
+      environment:
+        - FTP_USER=al_test_user
+        - FTP_PASS=password
+      ports:
+        - '21:21'
+        - '20:20'
+        - '21100-21110:21100-21110'
 
 jobs:
 - job: run_test
@@ -33,6 +42,7 @@ jobs:
   services:
     elasticsearch: elasticsearch
     redis: redis
+    ftpserver: ftpserver
 
   steps:
     - task: UsePythonVersion@0
