@@ -161,7 +161,6 @@ class TransportAzure(Transport):
             except ResourceExistsError:
                 pass
 
-# TODO: Create an extension of the base class TransportFile
 
 class TransportReadStreamAzure(TransportReadStream):
     def __init__(self, streamFile):
